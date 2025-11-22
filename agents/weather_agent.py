@@ -1,4 +1,5 @@
 import requests
+from datetime import datetime
 
 class WeatherAgent:
     def get_weather(self, lat, lon):
@@ -7,7 +8,8 @@ class WeatherAgent:
             "latitude": lat,
             "longitude": lon,
             "current_weather": True,
-            "hourly": "precipitation_probability"
+            "hourly": "precipitation_probability",
+            "timezone": "auto"
         }
 
         try:
@@ -17,7 +19,20 @@ class WeatherAgent:
             return "I couldn't fetch the weather right now."
 
         data = response.json()
+
+        # current temperature
         temp = data["current_weather"]["temperature"]
-        rain = data["hourly"]["precipitation_probability"][0]
+
+        # Find correct hour index
+        now = data["current_weather"]["time"]       # e.g. 2025-11-22T12:00
+        hourly_times = data["hourly"]["time"]
+
+        try:
+            hour_index = hourly_times.index(now)
+        except ValueError:
+            hour_index = 0  # fallback
+
+        # real rain probability
+        rain = data["hourly"]["precipitation_probability"][hour_index]
 
         return f"it's currently {temp}°C with a {rain}% chance of rain."
