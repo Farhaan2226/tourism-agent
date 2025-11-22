@@ -3,12 +3,22 @@ import requests
 class Geocoder:
     def get_coordinates(self, place: str):
         url = "https://nominatim.openstreetmap.org/search"
-        params = {"q": place, "format": "json", "limit": 1}
+        params = {
+            "q": place,
+            "format": "json",
+            "limit": 1,
+            "addressdetails": 1,
+            "email": "farhanmd2004@gmail.com"   
+        }
+
+        headers = {
+            "User-Agent": "tourism-agent/1.0 (farhanmd2004@gmail.com)"
+        }
 
         try:
-            response = requests.get(url, params=params, timeout=10)
+            response = requests.get(url, params=params, headers=headers, timeout=10)
             response.raise_for_status()
-        except:
+        except Exception as e:
             return None
 
         data = response.json()
