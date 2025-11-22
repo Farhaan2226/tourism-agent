@@ -59,32 +59,6 @@ This is the “brain.”
 It decides which agents to call and assembles the final answer in natural human-like text.
 
 
-     
-PROJECT STRUCTURE:
-tourism_agent/
-│── app.py
-│── streamlit_app.py
-│── requirements.txt
-│── Procfile
-│
-
-
-
-├── core/
-│   └── tourism_orchestrator.py
-│
-
-
-├── agents/
-│   ├── weather_agent.py
-│   ├── places_agent.py
-│
-
-
-├── utils/
-│   ├── geocode.py
-│   ├── intent.py
-
 RUNNING THE APP LOCALLY:
 1. Install requirements :
 pip install -r requirements.txt
@@ -106,6 +80,7 @@ Streamlit UI → Streamlit Cloud
 Procfile handles production startup.
 
 TECH STACK:
+
 •	FastAPI
 
 •	Streamlit
@@ -122,6 +97,7 @@ TECH STACK:
 •	Overpass API (OSM)
 
 •	Render(hosting)
+
 
 
 
