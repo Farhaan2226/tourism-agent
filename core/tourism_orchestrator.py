@@ -71,11 +71,12 @@ class TourismOrchestrator:
 
             # 9️⃣ BOTH WEATHER + PLACES
             if temp is not None and places:
+                places_text = "\n".join(places)
                 return (
                     f"In {place.title()} it’s currently {temp}°C "
-                    f"with a {rain}% chance of rain.\n"
+                    f"with a {rain}% chance of rain. "
                     f"And these are the places you can go:\n"
-                    + "\n".join([p for p in places])
+                    f"{places_text}"
                 )
 
             # Fallback
