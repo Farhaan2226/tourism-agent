@@ -2,19 +2,26 @@
 🌍 Tourism Multi-Agent Assistant
 
 Hey Guys! This project is something I built to understand how multiple agents can co-operate to give real-world solutions.
-The project basically invloves:
+The project basically involves:
 
 •	Typing a question like:
+
                    “weather and places to visit in Bangalore”
+                   
 •	The system figures out what I want
+
 •	It checks the weather
+
 •	It finds nearby tourist spots
+
 •	And it replies in a clean, human-readable format
+
 
 Everything runs through a FastAPI backend, and the system is fully deployed online.
 I have used Streamlit for an interactive UI
 
 LIVE DEMO LINKS:
+
 	Backend (FastAPI – Render):
 •	https://tourism-agent.onrender.com
 
@@ -26,10 +33,15 @@ LIVE DEMO LINKS:
 
 WHAT THE APP DOES:
 You can ask it things like:
+
 •	“weather in Goa”
+
 •	“places to visit in Chennai”
+
 •	“weather and places to visit in Bangalore”
+
 •	“tourist attractions in Dubai”
+
 It will:
 1.	Understand whether you want weather, places, or both
 2.	Identify the city
@@ -97,6 +109,7 @@ TECH STACK:
 •	Overpass API (OSM)
 
 •	Render(hosting)
+
 
 
 
