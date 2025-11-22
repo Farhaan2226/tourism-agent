@@ -3,6 +3,7 @@ from agents.places_agent import PlacesAgent
 from utils.intent import IntentDetector
 from utils.geocode import Geocoder
 
+
 class TourismOrchestrator:
     def __init__(self):
         self.weather_agent = WeatherAgent()
@@ -11,59 +12,75 @@ class TourismOrchestrator:
         self.geocoder = Geocoder()
 
     def process(self, query: str) -> str:
-        """
-        Main pipeline:
-        - Extract place
-        - Geocode place
-        - Infer intents
-        - Call WeatherAgent / PlacesAgent
-        - Combine responses
-        - Always return CLEAN result
-        """
-
         try:
-            # 1. Extract place
+            # 1️⃣ Extract the place
             place = self.intent_detector.extract_place(query)
             if not place:
                 return "I couldn't detect the place. Please try again."
 
-            # 2. Geocode the place
+            # 2️⃣ Geocode the place
             coords = self.geocoder.get_coordinates(place)
             if coords is None:
                 return f"I couldn't find '{place}' on the map."
 
             lat, lon = coords
 
-            # 3. Detect intentions
+            # 3️⃣ Detect user intent
             intents = self.intent_detector.detect_intents(query)
-            responses = []
 
-            # 4. Weather info
+            # Prepare weather and places variables
+            temp = None
+            rain = None
+            places = []
+
+            # 4️⃣ WEATHER INTENT
             if intents["weather"]:
-                weather_text = self.weather_agent.get_weather(lat, lon)
-                responses.append(f"In {place}, {weather_text}")
+                temp, rain = self.weather_agent.get_weather(lat, lon)
+                if temp is None:
+                    return f"I found {place.title()}, but I couldn't get the weather data."
 
-            # 5. Places / attractions
+            # 5️⃣ PLACES / TOURIST INTENT
             if intents["places"]:
                 places = self.places_agent.get_places(lat, lon)
-                if places:
-                    formatted = "\n- " + "\n- ".join(places)
-                    responses.append(f"Here are some places to visit:{formatted}")
-                else:
-                    responses.append("I couldn't find attractions nearby.")
 
-            # 6. If no explicit intent → return places only
-            if not responses:
+            # 6️⃣ If no intents → default to places list
+            if not intents["weather"] and not intents["places"]:
                 places = self.places_agent.get_places(lat, lon)
-                if places:
-                    formatted = "\n- " + "\n- ".join(places)
-                    return f"Places to visit in {place}:{formatted}"
-                else:
-                    return f"I couldn't find anything interesting in {place}."
+                if not places:
+                    return f"In {place.title()} I couldn't find any popular tourist spots."
+                return (
+                    f"Here are some places you can go in {place.title()}:\n"
+                    + "\n".join([p for p in places])
+                )
 
-            return " ".join(responses)
+            # 7️⃣ WEATHER ONLY
+            if intents["weather"] and not intents["places"]:
+                return (
+                    f"In {place.title()} it’s currently {temp}°C "
+                    f"with a {rain}% chance of rain."
+                )
+
+            # 8️⃣ PLACES ONLY
+            if intents["places"] and not intents["weather"]:
+                if not places:
+                    return f"I couldn't find any tourist places in {place.title()}."
+                return (
+                    f"And these are the places you can go in {place.title()}:\n"
+                    + "\n".join([p for p in places])
+                )
+
+            # 9️⃣ BOTH WEATHER + PLACES
+            if temp is not None and places:
+                return (
+                    f"In {place.title()} it’s currently {temp}°C "
+                    f"with a {rain}% chance of rain.\n"
+                    f"And these are the places you can go:\n"
+                    + "\n".join([p for p in places])
+                )
+
+            # Fallback
+            return "I couldn't generate a response. Please try again."
 
         except Exception as e:
-            # If ANYTHING fails, we return the error so we can debug Render
             return f"Internal error: {str(e)}"
 
