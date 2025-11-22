@@ -76,7 +76,7 @@ class TourismOrchestrator:
                     f"In {place.title()} it’s currently {temp}°C "
                     f"with a {rain}% chance of rain. "
                     f"And these are the places you can go:"
-                    f"|{places_text}|"
+                    f"{places_text}"
                 )
 
             # Fallback
