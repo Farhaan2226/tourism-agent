@@ -11,37 +11,59 @@ class TourismOrchestrator:
         self.geocoder = Geocoder()
 
     def process(self, query: str) -> str:
-        place = self.intent_detector.extract_place(query)
+        """
+        Main pipeline:
+        - Extract place
+        - Geocode place
+        - Infer intents
+        - Call WeatherAgent / PlacesAgent
+        - Combine responses
+        - Always return CLEAN result
+        """
 
-        if not place:
-            return "I couldn't detect the place. Please try again."
+        try:
+            # 1. Extract place
+            place = self.intent_detector.extract_place(query)
+            if not place:
+                return "I couldn't detect the place. Please try again."
 
-        coords = self.geocoder.get_coordinates(place)
-        if coords is None:
-            return f"I don't know if '{place}' exists."
+            # 2. Geocode the place
+            coords = self.geocoder.get_coordinates(place)
+            if coords is None:
+                return f"I couldn't find '{place}' on the map."
 
-        lat, lon = coords
+            lat, lon = coords
 
-        intents = self.intent_detector.detect_intents(query)
-        responses = []
+            # 3. Detect intentions
+            intents = self.intent_detector.detect_intents(query)
+            responses = []
 
-        if intents["weather"]:
-            responses.append(
-                f"In {place}, {self.weather_agent.get_weather(lat, lon)}"
-            )
+            # 4. Weather info
+            if intents["weather"]:
+                weather_text = self.weather_agent.get_weather(lat, lon)
+                responses.append(f"In {place}, {weather_text}")
 
-        if intents["places"]:
-            places = self.places_agent.get_places(lat, lon)
-            if places:
-                formatted = "\n- " + "\n- ".join(places)
-                responses.append(f"Here are some places to visit:{formatted}")
-            else:
-                responses.append("I couldn't find attractions nearby.")
+            # 5. Places / attractions
+            if intents["places"]:
+                places = self.places_agent.get_places(lat, lon)
+                if places:
+                    formatted = "\n- " + "\n- ".join(places)
+                    responses.append(f"Here are some places to visit:{formatted}")
+                else:
+                    responses.append("I couldn't find attractions nearby.")
 
-        if not responses:
-            # default behavior: give places
-            places = self.places_agent.get_places(lat, lon)
-            formatted = "\n- " + "\n- ".join(places)
-            return f"Places to visit in {place}:{formatted}"
+            # 6. If no explicit intent → return places only
+            if not responses:
+                places = self.places_agent.get_places(lat, lon)
+                if places:
+                    formatted = "\n- " + "\n- ".join(places)
+                    return f"Places to visit in {place}:{formatted}"
+                else:
+                    return f"I couldn't find anything interesting in {place}."
 
-        return " ".join(responses)
+            return " ".join(responses)
+
+        except Exception as e:
+            # If ANYTHING fails, we return the error so we can debug Render
+            return f"Internal error: {str(e)}"
+
