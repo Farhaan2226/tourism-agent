@@ -75,7 +75,7 @@ class TourismOrchestrator:
                 return (
                     f"In {place.title()} it’s currently {temp}°C "
                     f"with a {rain}% chance of rain. "
-                    f"And these are the places you can go:"
+                    f"And these are the places you can go:\n"
                     f"{places_text}"
                 )
 
