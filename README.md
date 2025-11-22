@@ -17,8 +17,10 @@ I have used Streamlit for an interactive UI
 LIVE DEMO LINKS:
 	Backend (FastAPI – Render):
 •	https://tourism-agent.onrender.com
-                  Swagger Docs:
+
+ Swagger Docs:
 •	https://tourism-agent.onrender.com/docs
+
 	Streamlit UI (Frontend)
 •	https://tourism-agent-jl4bhbwkbizhwtohr6o8tz.streamlit.app/
 
@@ -105,5 +107,6 @@ TECH STACK:
 •	Nominatim Geocoding
 •	Overpass API (OSM)
 •	Render(hosting)
+
 
 
