@@ -12,28 +12,26 @@ class IntentDetector:
     def extract_place(self, text: str):
         text = text.lower()
 
-        # 1️⃣ Match patterns like "in goa", "in mumbai"
+        # Match "in bangalore"
         match = re.search(r"\bin ([a-zA-Z\s]+)", text)
         if match:
             place = match.group(1).strip()
-            # take only last word(s) by removing verbs like "visit"
-            # e.g. "visit in goa" → "goa"
             tokens = place.split()
-            # keep the last token OR last 2 tokens (for "new york")
-            if len(tokens) == 1:
-                return tokens[0]
-            else:
-                return " ".join(tokens[-2:])  # handles "new york", "los angeles"
+            stopwords = {"to", "visit", "in", "the", "go", "best", "places"}
+            cleaned = [t for t in tokens if t not in stopwords]
+            if len(cleaned) == 1:
+                return cleaned[0]
+            return " ".join(cleaned[-2:])
 
-        # 2️⃣ Match "to goa"
+        # Match "to bangalore"
         match = re.search(r"\bto ([a-zA-Z\s]+)", text)
         if match:
             place = match.group(1).strip()
             tokens = place.split()
-            if len(tokens) == 1:
-                return tokens[0]
-            else:
-                return " ".join(tokens[-2:])
+            stopwords = {"to", "visit", "in", "the", "go", "best", "places"}
+            cleaned = [t for t in tokens if t not in stopwords]
+            if len(cleaned) == 1:
+                return cleaned[0]
+            return " ".join(cleaned[-2:])
 
         return None
-
