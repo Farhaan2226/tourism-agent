@@ -67,25 +67,32 @@ tourism_agent/
 │── requirements.txt
 │── Procfile
 │
+
+
+
 ├── core/
 │   └── tourism_orchestrator.py
 │
+
+
 ├── agents/
 │   ├── weather_agent.py
 │   ├── places_agent.py
 │
+
+
 ├── utils/
 │   ├── geocode.py
 │   ├── intent.py
 
 RUNNING THE APP LOCALLY:
-1. Install requirements
+1. Install requirements :
 pip install -r requirements.txt
-2. Run FastAPI
+2. Run FastAPI :
 uvicorn main:app --reload
 API will be live at:
 http://127.0.0.1:8000
-3. (Optional) Run Streamlit
+3. Run Streamlit :
 streamlit run streamlit_app.py
 
 DEPLOYMENT:
@@ -100,13 +107,22 @@ Procfile handles production startup.
 
 TECH STACK:
 •	FastAPI
+
 •	Streamlit
+
 •	Python
+
 •	Requests
+
 •	Open-Meteo API
+
 •	Nominatim Geocoding
+
+
 •	Overpass API (OSM)
+
 •	Render(hosting)
+
 
 
 
