@@ -30,7 +30,9 @@ class WeatherAgent:
         try:
             index = hourly_times.index(now)
         except ValueError:
-            index = 0  # fallback
+    # fallback: nearest hour
+            index = len(data["hourly"]["time"]) // 2
+
 
         rain = data["hourly"]["precipitation_probability"][index]
 
