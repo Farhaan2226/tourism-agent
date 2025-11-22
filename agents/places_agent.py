@@ -10,7 +10,9 @@ class PlacesAgent:
         url = "https://overpass-api.de/api/interpreter"
 
         try:
-            response = requests.post(url, data=query, timeout=15)
+            headers = {"User-Agent": "tourism-agent-app/1.0"}
+            response = requests.post(url, data=query, headers=headers, timeout=15)
+
             response.raise_for_status()
         except:
             return []
